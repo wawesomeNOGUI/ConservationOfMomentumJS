@@ -1,0 +1,188 @@
+<html>
+<body>
+<script>
+var animate = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
+        window.setTimeout(callback, 1000/60)
+    };
+var canvas = document.createElement("canvas");
+var width = 1000;
+var height = 700;
+canvas.width = width;
+canvas.height = height;
+var context = canvas.getContext('2d');
+
+var balls = [
+  [
+    100,    //x
+    350,   //y
+    25,    //width
+    25,     //height
+    0,      //velocity x
+    0       //velocity y
+  ],
+  [
+    126,    //x
+    350,   //y
+    25,    //width
+    25,     //height
+    0,      //velocity x
+    0       //velocity y
+  ],
+  [
+    250,
+    350,
+    325,
+    325,
+    0,      //velocity x
+    0       //velocity y
+  ],
+  [
+    600,
+    350,
+    25,
+    25,
+    0,      //velocity x
+    0       //velocity y
+  ],
+  [
+    750,
+    350,
+    50,
+    50,
+    0,      //velocity x
+    0       //velocity y
+  ]
+]
+
+//console.log(balls[1][0]);
+//console.log(balls.length);
+
+
+var keysDown = {};     //This creates var for keysDown event
+
+
+
+
+var render = function () {
+
+   context.fillStyle = "#FFFFFF";                 //Example of Drawing a screen & below some text to the canvas
+   context.fillRect(0, 0, width, height);
+
+  for(var i = 0; i<balls.length; i++){
+    context.fillStyle = "#FF0000";
+    context.fillRect(balls[i][0], balls[i][1], balls[i][2], balls[i][3]);
+    context.strokeStyle = "#FFFFFF";
+    context.strokeRect(balls[i][0], balls[i][1], balls[i][2], balls[i][3]);
+  }
+
+
+
+};
+
+
+
+balls[0][4] = 5;  //starting velocity
+balls[1][4] = 2;
+balls[2][4] = 0;
+balls[3][4] = -3.14159;
+
+var update = function() {
+//keyPress();
+for(var i = 0; i<balls.length; i++){
+
+    balls[i][0] = balls[i][0] + balls[i][4] //keep moving if not hitting anythin
+
+
+}
+
+for(var i = 0; i<balls.length; i++){
+    //balls[i][0] = balls[i][0] + balls[i][4]; //x = x + xVelocity
+/*
+    if( i == (balls.length - 1) ){  //ball on end
+        balls[i][0] = balls[i][0] + balls[i][4];
+    }else if ( balls[i][0] + balls[i][2] == balls[i+1][0] ){
+
+    }
+*/
+  if(i<balls.length-1 && balls[i][0] + balls[i][2] >= balls[i+1][0] && Math.sign(balls[i][4]) == 1 ){
+      //balls touching to right
+    //  balls[i+1][4] = balls[i][4] + .01*( balls[i][2]-balls[i+1][2] );  //ball velocity passes on
+      balls[i+1][4] = balls[i][4] * balls[i][2] / balls[i+1][2];
+      balls[i][4] = 0;
+      console.log(balls[i+1][4]);
+
+  }else if(i>0 && balls[i][0] <= balls[i-1][0]+balls[i-1][2] && Math.sign(balls[i][4]) == -1 ){  //balls touching to left
+    //  balls[i-1][4] = balls[i][4] + .01*( balls[i-1][2] - balls[i][2]);  //ball velocity passes on
+      balls[i-1][4] = balls[i][4] * balls[i][2] / balls[i-1][2];
+      balls[i][4] = 0;
+      //console.log(balls[i-1][4]);
+
+  }
+
+  if(balls[i][0]+balls[i][2] >= canvas.width){
+    balls[i][4] = balls[i][4] * (-1);  //bounce off right side
+    balls[i][0] = balls[i][0] + balls[i][4];  //bounce
+    //console.log('nice');
+  }else if(balls[i][0] <= 0){
+    balls[i][4] = balls[i][4] * (-1);  //bounce off left side
+    balls[i][0] = balls[i][0] + balls[i][4];  //bounce
+    console.log('lefty bounce')
+  }
+
+}
+
+
+};
+
+
+
+var step = function() {
+update();
+render();
+animate(step);
+};
+
+
+
+var keyPress = function() {
+
+for(var key in keysDown) {
+    var value = Number(key);
+
+   if (value == 37) {   //37 = left
+
+	    //Put stuff for keypress to activate here
+   } else if(value == 39){  //38 = right
+
+   } else if(value == 40){  //40 = down
+
+   } else if(value == 38){  //39 = up
+
+   }
+
+ }
+
+};
+
+
+
+
+
+
+document.body.appendChild(canvas);
+animate(step);
+
+
+window.addEventListener("keydown", function (event) {
+keysDown[event.keyCode] = true;
+});
+
+
+window.addEventListener("keyup", function (event) {
+    delete keysDown[event.keyCode];
+});
+
+</script>
+
+</body>
+</html>
