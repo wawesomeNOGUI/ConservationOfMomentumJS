@@ -1,5 +1,12 @@
 <html>
 <body>
+
+  <input type="text" id="v" value=0>Input Velocity </input>
+
+
+  <input type="text" id="b" oninput="ballSelect()" value=0>For which ball number? </input>
+
+
 <script>
 var animate = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (callback) {
         window.setTimeout(callback, 1000/60)
@@ -60,6 +67,18 @@ var balls = [
 
 var keysDown = {};     //This creates var for keysDown event
 
+var whichBall = 0;
+
+function userVelocity(){
+  balls[whichBall][4] = Number(document.getElementById("v").value);
+  //console.log(balls[whichBall][4]);
+  //console.log(balls[whichBall][0]);
+}
+
+function ballSelect(){
+  whichBall = Number(document.getElementById("b").value);
+}
+
 
 
 
@@ -81,10 +100,10 @@ var render = function () {
 
 
 
-balls[0][4] = 5;  //starting velocity
-balls[1][4] = 2;
+//balls[0][4] = 15;  //starting velocity
+balls[1][4] = 0;
 balls[2][4] = 0;
-balls[3][4] = -3.14159;
+balls[3][4] = 0;
 
 var update = function() {
 //keyPress();
@@ -96,20 +115,13 @@ for(var i = 0; i<balls.length; i++){
 }
 
 for(var i = 0; i<balls.length; i++){
-    //balls[i][0] = balls[i][0] + balls[i][4]; //x = x + xVelocity
-/*
-    if( i == (balls.length - 1) ){  //ball on end
-        balls[i][0] = balls[i][0] + balls[i][4];
-    }else if ( balls[i][0] + balls[i][2] == balls[i+1][0] ){
 
-    }
-*/
   if(i<balls.length-1 && balls[i][0] + balls[i][2] >= balls[i+1][0] && Math.sign(balls[i][4]) == 1 ){
       //balls touching to right
     //  balls[i+1][4] = balls[i][4] + .01*( balls[i][2]-balls[i+1][2] );  //ball velocity passes on
-      balls[i+1][4] = balls[i][4] * balls[i][2] / balls[i+1][2];
+      balls[i+1][4] = balls[i][4] * balls[i][2] / balls[i+1][2];    //velocity*mass = momentum
       balls[i][4] = 0;
-      console.log(balls[i+1][4]);
+      //console.log(balls[i+1][4]);
 
   }else if(i>0 && balls[i][0] <= balls[i-1][0]+balls[i-1][2] && Math.sign(balls[i][4]) == -1 ){  //balls touching to left
     //  balls[i-1][4] = balls[i][4] + .01*( balls[i-1][2] - balls[i][2]);  //ball velocity passes on
@@ -126,7 +138,7 @@ for(var i = 0; i<balls.length; i++){
   }else if(balls[i][0] <= 0){
     balls[i][4] = balls[i][4] * (-1);  //bounce off left side
     balls[i][0] = balls[i][0] + balls[i][4];  //bounce
-    console.log('lefty bounce')
+    //console.log('lefty bounce')
   }
 
 }
@@ -180,6 +192,19 @@ keysDown[event.keyCode] = true;
 
 window.addEventListener("keyup", function (event) {
     delete keysDown[event.keyCode];
+    enterDown = false;
+});
+
+var enterDown = false;
+
+document.getElementById('v').addEventListener('keypress', function (e) {
+    if (e.which === 13 && enterDown == false) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        enterDown = true;
+        userVelocity();
+    }
 });
 
 </script>
