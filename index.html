@@ -119,7 +119,7 @@ for(var i = 0; i<balls.length; i++){
   if(i<balls.length-1 && balls[i][0] + balls[i][2] >= balls[i+1][0] && Math.sign(balls[i][4]) == 1 ){
       //balls touching to right
     //  balls[i+1][4] = balls[i][4] + .01*( balls[i][2]-balls[i+1][2] );  //ball velocity passes on
-      balls[i+1][4] = balls[i][4] * balls[i][2] / balls[i+1][2];    //velocity*mass = momentum
+      balls[i+1][4] = balls[i][4] * balls[i][2] / balls[i+1][2];    //velocity*mass = momentum, divide momentum by other ball's mass to get new velocity
       balls[i][4] = 0;
       //console.log(balls[i+1][4]);
 
